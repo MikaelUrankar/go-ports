@@ -109,7 +109,7 @@ func main() {
 			gohostarch = "arm64"
 		case strings.Contains(out, "ppc64le"):
 			gohostarch = "ppc64le"
-		case strings.Contains(out, "ppc64"):
+		case strings.Contains(out, "ppc64"), strings.Contains(out, "powerpc"):
 			gohostarch = "ppc64"
 		case strings.Contains(out, "mips64"):
 			gohostarch = "mips64"

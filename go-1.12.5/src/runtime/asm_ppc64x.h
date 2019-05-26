@@ -22,4 +22,4 @@
 // we only support PIC on ppc64le which has a minimum 32 bytes of stack frame,
 // and currently always use that much, PIC on ppc64 would need to use 48).
 
-#define FIXED_FRAME 32
+#define FIXED_FRAME 48
