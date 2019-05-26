@@ -51,21 +51,6 @@ func (c *sigctxt) r30() uint64 { return c.regs().mc_frame[30] }
 func (c *sigctxt) r31() uint64 { return c.regs().mc_frame[31] }
 func (c *sigctxt) sp() uint64  { return c.regs().mc_frame[1] }
 
-//func (c *sigctxt) lr() uint64  { return c.regs().mc_frameegs.gp_lr }
-
-// /* GPRs and supervisor-level regs */
-// #define mc_gpr          mc_frame
-// #define mc_lr           mc_frame[32]
-// #define mc_cr           mc_frame[33]
-// #define mc_xer          mc_frame[34]
-// #define mc_ctr          mc_frame[35]
-// #define mc_srr0         mc_frame[36]
-// #define mc_srr1         mc_frame[37]
-// #define mc_exc          mc_frame[38]
-// #define mc_dar          mc_frame[39]
-// #define mc_dsisr        mc_frame[40]
-
-
 //go:nosplit
 //go:nowritebarrierrec
 func (c *sigctxt) pc() uint64 { return c.regs().mc_frame[36] }   // mc_srr0
