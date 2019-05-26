@@ -1,0 +1,5 @@
+TIMESTAMP = 1556559440
+SHA256 (go-freebsd-arm64-bootstrap.tar.gz) = 9087c8b8da27da4f1305a69705e4ce683f7e72f245408a1bd7d0689dbfd97f5f
+SIZE (go-freebsd-arm64-bootstrap.tar.gz) = 118330925
+SHA256 (go-freebsd-ppc64-bootstrap.tar.gz) = 138fa5d264538a8a049bd785c77067a59b705ad05b05152d5b17da49f9be6964
+SIZE (go-freebsd-ppc64-bootstrap.tar.gz) = 120361266
