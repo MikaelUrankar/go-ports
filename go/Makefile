@@ -45,7 +45,7 @@ GOARM=${ARCH:C/armv//}
 .endif
 
 .if ${ARCH} == powerpc64
-#BUILD_DEPENDS=	go112>=1.12:lang/go112
+BUILD_DEPENDS=	go112>=1.12:lang/go112
 GO_BOOSTRAP=	${LOCALBASE}/go112
 CGO_ENABLED=	1
 USE_GCC=	yes
