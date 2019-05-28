@@ -757,7 +757,7 @@ go/pkg/%%opsys_ARCH%%/net/url.a
 go/pkg/%%opsys_ARCH%%/os.a
 go/pkg/%%opsys_ARCH%%/os/exec.a
 go/pkg/%%opsys_ARCH%%/os/signal.a
-%%CGO%%go/pkg/%%opsys_ARCH%%/os/signal/internal/pty.a
+go/pkg/%%opsys_ARCH%%/os/signal/internal/pty.a
 go/pkg/%%opsys_ARCH%%/os/user.a
 go/pkg/%%opsys_ARCH%%/path.a
 go/pkg/%%opsys_ARCH%%/path/filepath.a
@@ -766,7 +766,7 @@ go/pkg/%%opsys_ARCH%%/reflect.a
 go/pkg/%%opsys_ARCH%%/regexp.a
 go/pkg/%%opsys_ARCH%%/regexp/syntax.a
 go/pkg/%%opsys_ARCH%%/runtime.a
-%%CGO%%go/pkg/%%opsys_ARCH%%/runtime/cgo.a
+go/pkg/%%opsys_ARCH%%/runtime/cgo.a
 go/pkg/%%opsys_ARCH%%/runtime/debug.a
 go/pkg/%%opsys_ARCH%%/runtime/internal/atomic.a
 go/pkg/%%opsys_ARCH%%/runtime/internal/math.a

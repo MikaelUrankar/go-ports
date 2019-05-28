@@ -11016,6 +11016,15 @@ index 0000000..1455d68
 +	Ispeed uint32
 +	Ospeed uint32
 +}
--- 
-2.21.0
-
+diff --git a/go-1.12.5/src/runtime/cgo/gcc_linux_ppc64x.c b/go-1.12.5/src/runtime/cgo/gcc_linux_ppc64x.c
+index 9cb6e0c..14c1e6c 100644
+--- src/runtime/cgo/gcc_linux_ppc64x.c
++++ src/runtime/cgo/gcc_linux_ppc64x.c
+@@ -2,6 +2,7 @@
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
++// +build linux
+ // +build ppc64 ppc64le
+ 
+ #include <pthread.h>

@@ -47,14 +47,10 @@ GOARM=${ARCH:C/armv//}
 .if ${ARCH} == powerpc64
 BUILD_DEPENDS=	go112>=1.12:lang/go112
 GO_BOOSTRAP=	${LOCALBASE}/go112
-CGO_ENABLED=	1
 USE_GCC=	yes
-#PLIST_SUB+=	CGO="@comment "
 .else
 BUILD_DEPENDS=	go14>=1.4:lang/go14
 GO_BOOSTRAP=	${LOCALBASE}/go14
-CGO_ENABLED=	1
-PLIST_SUB+=	CGO=""
 .endif
 
 .ifdef QEMU_EMULATING
@@ -76,7 +72,7 @@ do-build:
 		GOROOT=${WRKSRC} GOROOT_FINAL=${PREFIX}/go \
 		GOROOT_BOOTSTRAP=${GO_BOOSTRAP} CC=${CC} \
 		GOBIN= GOARCH=${GOARCH} GOOS=${OPSYS:tl} \
-		GO386=${GO386} GOARM=${GOARM} CGO_ENABLED=${CGO_ENABLED} \
+		GO386=${GO386} GOARM=${GOARM} CGO_ENABLED=1 \
 		${SH} make.bash -v
 	${RM} -r ${WRKSRC}/pkg/obj \
 	    ${WRKSRC}/pkg/bootstrap \
