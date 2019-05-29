@@ -73,6 +73,7 @@ do-build:
 		GOROOT_BOOTSTRAP=${GO_BOOTSTRAP} CC=${CC} \
 		GOBIN= GOARCH=${GOARCH} GOOS=${OPSYS:tl} \
 		GO386=${GO386} GOARM=${GOARM} CGO_ENABLED=1 \
+		GOCACHE=${TMPDIR:U/tmp} \
 		${SH} make.bash -v
 	${RM} -r ${WRKSRC}/pkg/obj \
 	    ${WRKSRC}/pkg/bootstrap \
