@@ -104,7 +104,8 @@ func archinit(ctxt *ld.Link) {
 			*ld.FlagRound = 4096
 		}
 
-	case obj.Hlinux: /* ppc64 elf */
+	case obj.Hlinux, /* ppc64 elf */
+		obj.Hfreebsd:
 		if ld.SysArch == sys.ArchPPC64 {
 			*ld.FlagD = true // TODO(austin): ELF ABI v1 not supported yet
 		}
