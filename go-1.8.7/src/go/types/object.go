@@ -64,15 +64,10 @@ func Id(pkg *Package, name string) string {
 	// inside a package and outside a package - which breaks some
 	// tests)
 	path := "_"
-	// TODO(gri): shouldn't !ast.IsExported(name) => pkg != nil be an precondition?
-	// if pkg == nil {
-	// 	panic("nil package in lookup of unexported name")
-	// }
-	if pkg != nil {
+	// pkg is nil for objects in Universe scope and possibly types
+	// introduced via Eval (see also comment in object.sameId)
+	if pkg != nil && pkg.path != "" {
 		path = pkg.path
-		if path == "" {
-			path = "_"
-		}
 	}
 	return path + "." + name
 }
@@ -161,6 +156,28 @@ type TypeName struct {
 
 func NewTypeName(pos token.Pos, pkg *Package, name string, typ Type) *TypeName {
 	return &TypeName{object{nil, pos, pkg, name, typ, 0, token.NoPos}}
+// IsAlias reports whether obj is an alias name for a type.
+func (obj *TypeName) IsAlias() bool {
+	switch t := obj.typ.(type) {
+	case nil:
+		return false
+	case *Basic:
+		// unsafe.Pointer is not an alias.
+		if obj.pkg == Unsafe {
+			return false
+		}
+		// Any user-defined type name for a basic type is an alias for a
+		// basic type (because basic types are pre-declared in the Universe
+		// scope, outside any package scope), and so is any type name with
+		// a different name than the name of the basic type it refers to.
+		// Additionally, we need to look for "byte" and "rune" because they
+		// are aliases but have the same names (for better error messages).
+		return obj.pkg != nil || t.name != obj.name || t == universeByte || t == universeRune
+	case *Named:
+		return obj != t.obj
+	default:
+		return true
+	}
 }
 
 // A Variable represents a declared variable (including function parameters and results, and struct fields).
@@ -264,6 +281,7 @@ type Nil struct {
 }
 
 func writeObject(buf *bytes.Buffer, obj Object, qf Qualifier) {
+	var tname *TypeName
 	typ := obj.Type()
 	switch obj := obj.(type) {
 	case *PkgName:
@@ -277,8 +295,8 @@ func writeObject(buf *bytes.Buffer, obj Object, qf Qualifier) {
 		buf.WriteString("const")
 
 	case *TypeName:
+		tname = obj
 		buf.WriteString("type")
-		typ = typ.Underlying()
 
 	case *Var:
 		if obj.isField {
@@ -322,10 +340,27 @@ func writeObject(buf *bytes.Buffer, obj Object, qf Qualifier) {
 		writePackage(buf, obj.Pkg(), qf)
 	}
 	buf.WriteString(obj.Name())
-	if typ != nil {
-		buf.WriteByte(' ')
-		WriteType(buf, typ, qf)
+
+	if typ == nil {
+		return
 	}
+
+	if tname != nil {
+		// We have a type object: Don't print anything more for
+		// basic types since there's no more information (names
+		// are the same; see also comment in TypeName.IsAlias).
+		if _, ok := typ.(*Basic); ok {
+			return
+		}
+		if tname.IsAlias() {
+			buf.WriteString(" =")
+		} else {
+			typ = typ.Underlying()
+		}
+	}
+
+	buf.WriteByte(' ')
+	WriteType(buf, typ, qf)
 }
 
 func writePackage(buf *bytes.Buffer, pkg *Package, qf Qualifier) {
