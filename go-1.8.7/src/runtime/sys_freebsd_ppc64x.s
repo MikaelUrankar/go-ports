@@ -149,15 +149,16 @@ TEXT runtime·usleep(SB),NOSPLIT,$24-4
 	MOVW	$1000000, R4
 	DIVD	R4, R3
 	MOVD	R3, 8(R1)
-	MOVW	$1000, R4
 	MULLD	R3, R4
 	SUB	R4, R5
+	MOVW	$1000, R4
+	MULLD	R4, R5
 	MOVD	R5, 16(R1)
-
+	
 	// nanosleep(&ts, 0)
 	ADD	$8, R1, R3
 	MOVW	$0, R4
-	SYSCALL	$SYS_nanosleep
+	SYSCALL $SYS_nanosleep
 	RET
 
 TEXT runtime·raise(SB),NOSPLIT,$8
