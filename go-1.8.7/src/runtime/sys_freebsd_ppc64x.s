@@ -207,9 +207,8 @@ TEXT runtime·nanotime(SB),NOSPLIT,$16
 	MOVD	R3, ret+0(FP)
 	RET
 
-
-TEXT runtime·sigaction(SB),NOSPLIT|NOFRAME,$0
-	MOVD	sig+0(FP), R3		// arg 1 sig
+TEXT runtime·sigaction(SB),NOSPLIT,$-8
+	MOVW	sig+0(FP), R3		// arg 1 sig
 	MOVD	new+8(FP), R4		// arg 2 act
 	MOVD	old+16(FP), R5		// arg 3 oact
 	SYSCALL	$SYS_sigaction
