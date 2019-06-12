@@ -184,27 +184,27 @@ TEXT runtime·setitimer(SB),NOSPLIT|NOFRAME,$0-24
 
 // func now() (sec int64, nsec int32)
 TEXT time·now(SB),NOSPLIT,$16
-	MOVD    $CLOCK_REALTIME, R3
-	MOVD    $0(R1), R4
-	SYSCALL $SYS_clock_gettime
-	MOVD    0(R1), R3       // sec
-	MOVD    8(R1), R5       // nsec
-	MOVD    R3, sec+0(FP)
-	MOVW    R5, nsec+8(FP)
+	MOVD	$CLOCK_REALTIME, R3
+	MOVD	$0(R1), R4
+	SYSCALL	$SYS_clock_gettime
+	MOVD	0(R1), R3	// sec
+	MOVD	8(R1), R5	// nsec
+	MOVD	R3, sec+0(FP)
+	MOVW	R5, nsec+8(FP)
 	RET
 
 TEXT runtime·nanotime(SB),NOSPLIT,$16
-	MOVW    $CLOCK_MONOTONIC, R3
-	MOVD    $0(R1), R4
-	SYSCALL $SYS_clock_gettime
-	MOVD    0(R1), R3       // sec
-	MOVD    8(R1), R5       // nsec
+	MOVW	$CLOCK_MONOTONIC, R3
+	MOVD	$0(R1), R4
+	SYSCALL	$SYS_clock_gettime
+	MOVD	0(R1), R3	// sec
+	MOVD	8(R1), R5	// nsec
 	// sec is in R3, nsec in R5
 	// return nsec in R3
-	MOVD    $1000000000, R4
-	MULLD   R4, R3
-	ADD     R5, R3
-	MOVD    R3, ret+0(FP)
+	MOVD	$1000000000, R4
+	MULLD	R4, R3
+	ADD	R5, R3
+	MOVD	R3, ret+0(FP)
 	RET
 
 
