@@ -61,7 +61,5 @@ func archauxv(tag, val uintptr) {
 		cpu.isPOWER7 = val&_PPC_FEATURE_ARCH_2_06 != 0
 		cpu.hasVMX = val&_PPC_FEATURE_HAS_ALTIVEC != 0
 		cpu.hasVSX = val&_PPC_FEATURE_HAS_VSX != 0
-	case _AT_HWCAP2:
-		cpu.isPOWER8 = val&_PPC_FEATURE2_ARCH_2_07 != 0
 	}
 }
