@@ -90,9 +90,8 @@ TEXT thr_start<>(SB),NOSPLIT,$0
 	RET
 
 TEXT runtime·exit(SB),NOSPLIT|NOFRAME,$0-4
-	MOVD	$SYS_exit, R0
 	MOVW	code+0(FP), R3
-	SYSCALL
+	SYSCALL	$SYS_exit
 	RET
 
 TEXT runtime·exitThread(SB),NOSPLIT|NOFRAME,$0-8
