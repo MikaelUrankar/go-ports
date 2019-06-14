@@ -156,8 +156,8 @@ TEXT runtime·usleep(SB),NOSPLIT,$24-4
 
 	// nanosleep(&ts, 0)
 	ADD	$8, R1, R3
-	MOVW	$0, R4
-	SYSCALL $SYS_nanosleep
+	MOVD	$0, R4
+	SYSCALL	$SYS_nanosleep
 	RET
 
 TEXT runtime·raise(SB),NOSPLIT,$8
@@ -183,22 +183,22 @@ TEXT runtime·setitimer(SB),NOSPLIT|NOFRAME,$0-24
 	RET
 
 // func now() (sec int64, nsec int32)
-TEXT time·now(SB),NOSPLIT,$16
+TEXT time·now(SB),NOSPLIT,$32
 	MOVD	$CLOCK_REALTIME, R3
-	MOVD	$0(R1), R4
+	MOVD	$8(R1), R4
 	SYSCALL	$SYS_clock_gettime
-	MOVD	0(R1), R3	// sec
-	MOVD	8(R1), R5	// nsec
+	MOVD	8(R1), R3	// sec
+	MOVD	16(R1), R5	// nsec
 	MOVD	R3, sec+0(FP)
 	MOVW	R5, nsec+8(FP)
 	RET
 
-TEXT runtime·nanotime(SB),NOSPLIT,$16
-	MOVW	$CLOCK_MONOTONIC, R3
-	MOVD	$0(R1), R4
+TEXT runtime·nanotime(SB),NOSPLIT,$32
+	MOVD	$CLOCK_MONOTONIC, R3
+	MOVD	$8(R1), R4
 	SYSCALL	$SYS_clock_gettime
-	MOVD	0(R1), R3	// sec
-	MOVD	8(R1), R5	// nsec
+	MOVD	8(R1), R3	// sec
+	MOVD	16(R1), R5	// nsec
 	// sec is in R3, nsec in R5
 	// return nsec in R3
 	MOVD	$1000000000, R4
@@ -213,8 +213,7 @@ TEXT runtime·sigaction(SB),NOSPLIT,$-8
 	MOVD	old+16(FP), R5		// arg 3 oact
 	SYSCALL	$SYS_sigaction
 	BVC	2(PC)
-	MOVW	$-1, R3
-	MOVW	R3, ret+24(FP)
+	MOVD	R0, 0xf0(R0)  // crash
 	RET
 
 TEXT runtime·sigfwd(SB),NOSPLIT,$0-32
