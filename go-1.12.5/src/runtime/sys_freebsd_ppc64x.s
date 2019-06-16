@@ -91,9 +91,8 @@ TEXT thr_start<>(SB),NOSPLIT,$0
 	RET
 
 TEXT runtime·exit(SB),NOSPLIT|NOFRAME,$0-4
-	MOVD	$SYS_exit, R0
 	MOVW	code+0(FP), R3
-	SYSCALL
+	SYSCALL	$SYS_exit
 	RET
 
 TEXT runtime·exitThread(SB),NOSPLIT|NOFRAME,$0-8
@@ -150,14 +149,15 @@ TEXT runtime·usleep(SB),NOSPLIT,$24-4
 	MOVW	$1000000, R4
 	DIVD	R4, R3
 	MOVD	R3, 8(R1)
-	MOVW	$1000, R4
 	MULLD	R3, R4
 	SUB	R4, R5
+	MOVW	$1000, R4
+	MULLD	R4, R5
 	MOVD	R5, 16(R1)
 
 	// nanosleep(&ts, 0)
 	ADD	$8, R1, R3
-	MOVW	$0, R4
+	MOVD	$0, R4
 	SYSCALL	$SYS_nanosleep
 	RET
 
@@ -184,23 +184,21 @@ TEXT runtime·setitimer(SB),NOSPLIT|NOFRAME,$0-24
 	RET
 
 TEXT runtime·fallback_walltime(SB),NOSPLIT,$24-12
-	MOVW	$CLOCK_REALTIME, R3
+	MOVD	$CLOCK_REALTIME, R3
 	MOVD	$8(R1), R4
 	SYSCALL	$SYS_clock_gettime
-
 	MOVD	8(R1), R3	// sec
-	MOVW	16(R1), R4	// nsec
+	MOVD	16(R1), R5	// nsec
 	MOVD	R3, sec+0(FP)
-	MOVW	R4, nsec+8(FP)
+	MOVW	R5, nsec+8(FP)
 	RET
 
 TEXT runtime·fallback_nanotime(SB),NOSPLIT,$24-8
 	MOVD	$CLOCK_MONOTONIC, R3
 	MOVD	$8(R1), R4
 	SYSCALL	$SYS_clock_gettime
-	MOVD	0(R1), R3		// sec
-	MOVD	8(R1), R5		// nsec
-
+	MOVD	8(R1), R3	// sec
+	MOVD	16(R1), R5	// nsec
 	// sec is in R3, nsec in R5
 	// return nsec in R3
 	MOVD	$1000000000, R4
@@ -209,7 +207,7 @@ TEXT runtime·fallback_nanotime(SB),NOSPLIT,$24-8
 	MOVD	R3, ret+0(FP)
 	RET
 
-TEXT runtime·asmSigaction(SB),NOSPLIT|NOFRAME,$0
+TEXT runtime·asmSigaction(SB),NOSPLIT,$-8
 	MOVD	sig+0(FP), R3		// arg 1 sig
 	MOVD	new+8(FP), R4		// arg 2 act
 	MOVD	old+16(FP), R5		// arg 3 oact
